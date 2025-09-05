@@ -1,32 +1,24 @@
 package tracker.model;
 
 /**
- * Базовый класс для всех задач.
- * Содержит общие поля: id, название, описание и статус.
+ * Класс обычной задачи.
  */
 public class Task {
-    /** Уникальный идентификатор задачи. */
     private int id;
-
-    /** Название задачи. */
     private String name;
-
-    /** Описание задачи. */
     private String description;
-
-    /** Статус задачи. */
     private Status status;
 
-    /**
-     * Конструктор для создания задачи.
-     *
-     * @param name        название задачи
-     * @param description описание задачи
-     */
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.status = Status.NEW;
+    }
+
+    public Task(String name, String description, Status status) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
     }
 
     public int getId() {
