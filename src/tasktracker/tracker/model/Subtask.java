@@ -14,8 +14,7 @@ public class Subtask extends Task {
      * @param description описание подзадачи
      * @param epicId      идентификатор эпика, к которому относится
      */
-    public Subtask(String name, String description, int epicId)
-    {
+    public Subtask(String name, String description, int epicId) {
         super(name, description);
         this.epicId = epicId;
     }
@@ -25,14 +24,12 @@ public class Subtask extends Task {
      *
      * @return id эпика
      */
-    public int getEpicId()
-    {
+    public int getEpicId() {
         return epicId;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Subtask{" +
                "id=" + getId() +
                ", name='" + getName() + '\'' +
