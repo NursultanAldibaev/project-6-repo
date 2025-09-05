@@ -4,9 +4,11 @@ package tracker.model;
  * Класс задачи Task
  */
 public class Task {
+
     private int id;
     private String name;
     private String description;
+    private Status status;
 
     /**
      * Конструктор задачи
@@ -14,9 +16,11 @@ public class Task {
      * @param name        название задачи
      * @param description описание задачи
      */
-    public Task(String name, String description) {
+    public Task(String name, String description)
+    {
         this.name = name;
         this.description = description;
+        this.status = Status.NEW;
     }
 
     /**
@@ -24,7 +28,8 @@ public class Task {
      *
      * @return id
      */
-    public int getId() {
+    public int getId()
+    {
         return id;
     }
 
@@ -33,7 +38,8 @@ public class Task {
      *
      * @param id идентификатор
      */
-    public void setId(int id) {
+    public void setId(int id)
+    {
         this.id = id;
     }
 
@@ -42,7 +48,8 @@ public class Task {
      *
      * @return название
      */
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
@@ -51,7 +58,8 @@ public class Task {
      *
      * @param name название
      */
-    public void setName(String name) {
+    public void setName(String name)
+    {
         this.name = name;
     }
 
@@ -60,7 +68,8 @@ public class Task {
      *
      * @return описание
      */
-    public String getDescription() {
+    public String getDescription()
+    {
         return description;
     }
 
@@ -69,7 +78,27 @@ public class Task {
      *
      * @param description описание
      */
-    public void setDescription(String description) {
+    public void setDescription(String description)
+    {
         this.description = description;
     }
-}
+
+    /**
+     * Получить статус задачи
+     *
+     * @return статус
+     */
+    public Status getStatus()
+    {
+        return status;
+    }
+
+    /**
+     * Установить статус задачи
+     *
+     * @param status статус
+     */
+    public void setStatus(Status status)
+    {
+        this.status = status;
+    }
