@@ -5,10 +5,9 @@ import tracker.controllers.TaskManager;
 import tracker.model.Subtask;
 import tracker.model.Task;
 
-public class Main {
+public class Main { // скобка на той же строке
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) { // скобка на той же строке
         TaskManager manager = new InMemoryTaskManager();
 
         Task task1 = new Task("Task 1", "Description 1");
@@ -27,7 +26,7 @@ public class Main {
         }
 
         System.out.println("All subtasks:");
-        for (Subtask subtask : manager.getAllSubtasks()) { // теперь работает
+        for (Subtask subtask : manager.getAllSubtasks()) {
             System.out.println(subtask);
         }
     }
