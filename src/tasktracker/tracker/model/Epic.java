@@ -16,30 +16,25 @@ public class Epic extends Task {
      * @param name        название эпика
      * @param description описание эпика
      */
-    public Epic(String name, String description)
-    {
+    public Epic(String name, String description) {
         super(name, description);
         setStatus(Status.NEW);
     }
 
-    public List<Integer> getSubtaskIds()
-    {
+    public List<Integer> getSubtaskIds() {
         return subtaskIds;
     }
 
-    public void addSubtaskId(int id)
-    {
+    public void addSubtaskId(int id) {
         subtaskIds.add(id);
     }
 
-    public void removeSubtaskId(int id)
-    {
+    public void removeSubtaskId(int id) {
         subtaskIds.remove(Integer.valueOf(id));
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Epic{" +
                "id=" + getId() +
                ", name='" + getName() + '\'' +
