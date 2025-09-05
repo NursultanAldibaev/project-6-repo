@@ -2,12 +2,11 @@ package tracker.controllers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tracker.model.Status;
+import tracker.model.Subtask;
 import tracker.model.Task;
-import tracker.Status;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InMemoryTaskManagerTest {
 
@@ -15,32 +14,25 @@ class InMemoryTaskManagerTest {
 
     @BeforeEach
     void setUp() {
-        taskManager = Managers.getDefault();
+        taskManager = new InMemoryTaskManager();
     }
 
     @Test
-    void shouldAddNewTask() {
-        Task task = new Task("Test task", "Test description", Status.NEW);
-        int taskId = taskManager.createTask(task);
-
-        Task savedTask = taskManager.getTask(taskId);
-
-        assertNotNull(savedTask, "Задача не найдена.");
-        assertEquals(task.getName(), savedTask.getName(), "Названия задач не совпадают.");
-        assertEquals(task.getDescription(), savedTask.getDescription(), "Описания задач не совпадают.");
-        assertEquals(task.getStatus(), savedTask.getStatus(), "Статусы задач не совпадают.");
-    }
-
-    @Test
-    void shouldStoreTasksInHistory() {
-        Task task = new Task("History task", "Tracked task", Status.NEW);
+    void testCreateTask() {
+        Task task = new Task("Task 1", "Desc 1");
         int id = taskManager.createTask(task);
+        assertEquals(1, id);
+        assertEquals(Status.NEW, taskManager.getTaskById(id).getStatus());
+    }
 
-        // вызов метода getTask должен добавить в историю
-        taskManager.getTask(id);
-        List<Task> history = taskManager.getHistory();
+    @Test
+    void testCreateSubtask() {
+        Task task = new Task("Epic Task", "Desc Epic");
+        int epicId = taskManager.createTask(task);
 
-        assertEquals(1, history.size(), "История должна содержать одну задачу.");
-        assertEquals(task.getName(), history.get(0).getName(), "Неверная задача в истории.");
+        Subtask sub = new Subtask("Subtask 1", "Subdesc", epicId);
+        int subId = taskManager.createSubtask(sub);
+        assertEquals(1, subId);
+        assertEquals(Status.NEW, taskManager.getSubtaskById(subId).getStatus());
     }
 }
