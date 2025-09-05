@@ -1,20 +1,45 @@
 package tracker.model;
 
-// Класс подзадачи, связанной с эпиком
+/**
+ * Класс подзадачи, связанной с эпиком
+ */
 public class Subtask extends Task {
+
     private final int epicId;
 
-    public Subtask(String name, String description, int epicId) {
+    /**
+     * Конструктор подзадачи
+     *
+     * @param name        название подзадачи
+     * @param description описание подзадачи
+     * @param epicId      идентификатор эпика, к которому относится
+     */
+    public Subtask(String name, String description, int epicId)
+    {
         super(name, description);
         this.epicId = epicId;
     }
 
-    public int getEpicId() { return epicId; }
+    /**
+     * Получить идентификатор эпика
+     *
+     * @return id эпика
+     */
+    public int getEpicId()
+    {
+        return epicId;
+    }
 
     @Override
-    public String toString() {
-        return "Subtask{" + "id=" + getId() + ", name='" + getName() + '\'' +
+    public String toString()
+    {
+        return "Subtask{" +
+               "id=" + getId() +
+               ", name='" + getName() + '\'' +
                ", description='" + getDescription() + '\'' +
-               ", status=" + getStatus() + ", epicId=" + epicId + '}';
+               ", status=" + getStatus() +
+               ", epicId=" + epicId +
+               '}';
     }
+
 }
