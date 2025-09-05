@@ -1,35 +1,15 @@
 package tracker.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Класс эпика. Содержит список id подзадач.
- */
+// Класс Epic наследуется от Task и содержит список подзадач
 public class Epic extends Task {
-    private final List<Integer> subtaskIds = new ArrayList<>();
+    private java.util.List<Subtask> subtasks;
 
     public Epic(String name, String description) {
         super(name, description);
+        this.subtasks = new java.util.ArrayList<>();
     }
 
-    public Epic(String name, String description, Status status) {
-        super(name, description, status);
-    }
-
-    public List<Integer> getSubtaskIds() {
-        return subtaskIds;
-    }
-
-    public void addSubtask(int subtaskId) {
-        subtaskIds.add(subtaskId);
-    }
-
-    public void removeSubtask(int subtaskId) {
-        subtaskIds.remove((Integer) subtaskId);
-    }
-
-    public void clearSubtasks() {
-        subtaskIds.clear();
+    public java.util.List<Subtask> getSubtasks() {
+        return subtasks;
     }
 }
