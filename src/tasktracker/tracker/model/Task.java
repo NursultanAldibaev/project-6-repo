@@ -1,8 +1,5 @@
-package tracker.model;
+package tasktracker.tracker.model;
 
-/**
- * Класс обычной задачи.
- */
 public class Task {
     private int id;
     private String name;
@@ -13,12 +10,6 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = Status.NEW;
-    }
-
-    public Task(String name, String description, Status status) {
-        this.name = name;
-        this.description = description;
-        this.status = status;
     }
 
     public int getId() {

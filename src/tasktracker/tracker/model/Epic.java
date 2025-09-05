@@ -1,9 +1,8 @@
-package tracker.model;
+package tasktracker.tracker.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-// Эпик — задача, которая объединяет подзадачи
 public class Epic extends Task {
     private final List<Integer> subtaskIds = new ArrayList<>();
 
@@ -11,12 +10,12 @@ public class Epic extends Task {
         super(name, description);
     }
 
-    public void addSubtask(int id) {
-        subtaskIds.add(id);
+    public void addSubtask(int subtaskId) {
+        subtaskIds.add(subtaskId);
     }
 
-    public void removeSubtask(int id) {
-        subtaskIds.remove((Integer) id);
+    public void removeSubtask(int subtaskId) {
+        subtaskIds.remove((Integer) subtaskId);
     }
 
     public List<Integer> getSubtaskIds() {
