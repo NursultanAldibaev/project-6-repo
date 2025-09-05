@@ -1,65 +1,44 @@
 package tasktracker;
 
-import tracker.model.*;
-import tracker.model.Status;
-import tracker.controllers.Managers;
+import tracker.controllers.InMemoryTaskManager;
 import tracker.controllers.TaskManager;
+import tracker.model.Epic;
+import tracker.model.Subtask;
+import tracker.model.Task;
 
 public class Main {
     public static void main(String[] args) {
-        TaskManager manager = Managers.getDefault();
+        TaskManager manager = new InMemoryTaskManager();
 
-        // Создание задач
-        Task task1 = new Task("Починить баг", "Ошибка в отчёте", Status.NEW);
-        Task task2 = new Task("Проверить отчёт", "После починки", Status.NEW);
-        Epic epic1 = new Epic("Рефакторинг", "Улучшить структуру кода");
-        Subtask sub1 = new Subtask("Переделать TaskManager", "Сделать интерфейсом", Status.NEW, 0);
-        Subtask sub2 = new Subtask("Добавить историю", "Через отдельный класс", Status.NEW, 0);
+        Task task1 = new Task("Починить баг", "Ошибка в отчёте");
+        Task task2 = new Task("Проверить отчёт", "После починки");
 
-        int task1Id = manager.createTask(task1);
-        int task2Id = manager.createTask(task2);
+        manager.createTask(task1);
+        manager.createTask(task2);
+
+        Epic epic1 = new Epic("Большая задача", "Нужно сделать много всего");
         int epic1Id = manager.createEpic(epic1);
 
-        // Связываем подзадачи с эпиком
-        sub1.setEpicId(epic1Id);
-        sub2.setEpicId(epic1Id);
+        // ✅ убрали Status из конструктора Subtask
+        Subtask sub1 = new Subtask("Переделать TaskManager", "Сделать интерфейсом", epic1Id);
+        Subtask sub2 = new Subtask("Добавить историю", "Через отдельный класс", epic1Id);
 
-        int sub1Id = manager.createSubtask(sub1);
-        int sub2Id = manager.createSubtask(sub2);
+        manager.createSubtask(sub1);
+        manager.createSubtask(sub2);
 
-        // Получаем задачи (добавляются в историю)
-        manager.getTask(task1Id);
-        manager.getEpic(epic1Id);
-        manager.getSubtask(sub1Id);
-        manager.getSubtask(sub2Id);
-        manager.getTask(task2Id);
-        manager.getEpic(epic1Id); // повторно
-
-        printAll(manager);
-    }
-
-    private static void printAll(TaskManager manager) {
         System.out.println("Задачи:");
-        for (Task task : manager.getAllTasks()) {
-            System.out.println(task);
+        System.out.println(manager.getTask(task1.getId()));
+        System.out.println(manager.getTask(task2.getId()));
+
+        System.out.println("Эпики:");
+        System.out.println(manager.getEpic(epic1Id));
+
+        System.out.println("Подзадачи эпика:");
+        for (Subtask s : manager.getEpicSubtasks(epic1Id)) {
+            System.out.println(s);
         }
 
-        System.out.println("\nЭпики:");
-        for (Epic epic : manager.getAllEpics()) {
-            System.out.println(epic);
-            for (Subtask subtask : manager.getEpicSubtasks(epic.getId())) {
-                System.out.println("  --> " + subtask);
-            }
-        }
-
-        System.out.println("\nПодзадачи:");
-        for (Subtask subtask : manager.getAllSubtasks()) {
-            System.out.println(subtask);
-        }
-
-        System.out.println("\nИстория:");
-        for (Task t : manager.getHistory()) {
-            System.out.println(t);
-        }
+        System.out.println("История:");
+        System.out.println(manager.getHistory());
     }
 }
