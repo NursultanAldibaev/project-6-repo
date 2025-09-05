@@ -1,5 +1,6 @@
-package tasktracker.tracker.model;
+package tracker.model;
 
+// Класс обычной задачи
 public class Task {
     private int id;
     private String name;
@@ -14,8 +15,16 @@ public class Task {
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+
     public String getName() { return name; }
     public String getDescription() { return description; }
+
     public Status getStatus() { return status; }
     public void setStatus(Status status) { this.status = status; }
+
+    @Override
+    public String toString() {
+        return "Task{" + "id=" + id + ", name='" + name + '\'' +
+               ", description='" + description + '\'' + ", status=" + status + '}';
+    }
 }

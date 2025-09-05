@@ -1,17 +1,14 @@
-package tasktracker.tracker.controllers;
+package tracker.controllers;
 
-import tasktracker.tracker.model.Task;
-import tasktracker.tracker.model.Epic;
-import tasktracker.tracker.model.Subtask;
-
+import tracker.model.Task;
+import tracker.model.Epic;
+import tracker.model.Subtask;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Task> tasks = new HashMap<>();
     private final Map<Integer, Epic> epics = new HashMap<>();
     private final Map<Integer, Subtask> subtasks = new HashMap<>();
-    private final HistoryManager historyManager = Managers.getDefaultHistory();
-
     private int nextId = 1;
 
     @Override
@@ -38,64 +35,20 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTask(int id) {
-        Task task = tasks.get(id);
-        if (task != null) historyManager.add(task);
-        return task;
-    }
+    public Task getTask(int id) { return tasks.get(id); }
 
     @Override
-    public Epic getEpic(int id) {
-        Epic epic = epics.get(id);
-        if (epic != null) historyManager.add(epic);
-        return epic;
-    }
+    public Epic getEpic(int id) { return epics.get(id); }
 
     @Override
-    public Subtask getSubtask(int id) {
-        Subtask subtask = subtasks.get(id);
-        if (subtask != null) historyManager.add(subtask);
-        return subtask;
-    }
+    public Subtask getSubtask(int id) { return subtasks.get(id); }
 
     @Override
     public List<Task> getAllTasks() { return new ArrayList<>(tasks.values()); }
 
     @Override
-    public List<Epic> getAllEpics() { return new ArrayList<>(epics.values()); }
-
-    @Override
     public List<Subtask> getAllSubtasks() { return new ArrayList<>(subtasks.values()); }
 
     @Override
-    public void updateTask(Task task) { tasks.put(task.getId(), task); }
-
-    @Override
-    public void updateEpic(Epic epic) { epics.put(epic.getId(), epic); }
-
-    @Override
-    public void updateSubtask(Subtask subtask) { subtasks.put(subtask.getId(), subtask); }
-
-    @Override
-    public void deleteTask(int id) { tasks.remove(id); }
-
-    @Override
-    public void deleteEpic(int id) {
-        Epic epic = epics.remove(id);
-        if (epic != null) {
-            for (Integer subtaskId : epic.getSubtaskIds()) subtasks.remove(subtaskId);
-        }
-    }
-
-    @Override
-    public void deleteSubtask(int id) {
-        Subtask subtask = subtasks.remove(id);
-        if (subtask != null) {
-            Epic epic = epics.get(subtask.getEpicId());
-            if (epic != null) epic.removeSubtask(id);
-        }
-    }
-
-    @Override
-    public List<Task> getHistory() { return historyManager.getHistory(); }
+    public List<Epic> getAllEpics() { return new ArrayList<>(epics.values()); }
 }

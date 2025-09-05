@@ -1,5 +1,6 @@
-package tasktracker.tracker.model;
+package tracker.model;
 
+// Статусы задач
 public enum Status {
     NEW,
     IN_PROGRESS,

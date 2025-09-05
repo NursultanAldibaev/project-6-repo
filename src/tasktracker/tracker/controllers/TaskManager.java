@@ -1,11 +1,11 @@
-package tasktracker.tracker.controllers;
+package tracker.controllers;
 
-import tasktracker.tracker.model.Task;
-import tasktracker.tracker.model.Epic;
-import tasktracker.tracker.model.Subtask;
-
+import tracker.model.Task;
+import tracker.model.Epic;
+import tracker.model.Subtask;
 import java.util.List;
 
+// Интерфейс менеджера задач
 public interface TaskManager {
     int createTask(Task task);
     int createEpic(Epic epic);
@@ -16,16 +16,6 @@ public interface TaskManager {
     Subtask getSubtask(int id);
 
     List<Task> getAllTasks();
-    List<Epic> getAllEpics();
     List<Subtask> getAllSubtasks();
-
-    void updateTask(Task task);
-    void updateEpic(Epic epic);
-    void updateSubtask(Subtask subtask);
-
-    void deleteTask(int id);
-    void deleteEpic(int id);
-    void deleteSubtask(int id);
-
-    List<Task> getHistory();
+    List<Epic> getAllEpics();
 }

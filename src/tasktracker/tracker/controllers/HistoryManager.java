@@ -1,8 +1,9 @@
-package tasktracker.tracker.controllers;
+package tracker.controllers;
 
-import tasktracker.tracker.model.Task;
+import tracker.model.Task;
 import java.util.List;
 
+// Интерфейс менеджера истории просмотров
 public interface HistoryManager {
     void add(Task task);
     List<Task> getHistory();

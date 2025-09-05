@@ -1,6 +1,13 @@
-package tasktracker.tracker.controllers;
+package tracker.controllers;
 
+// Фабрика менеджеров
 public class Managers {
-    public static TaskManager getDefault() { return new InMemoryTaskManager(); }
-    public static HistoryManager getDefaultHistory() { return new InMemoryHistoryManager(); }
+
+    public static TaskManager getDefaultTaskManager() {
+        return new InMemoryTaskManager();
+    }
+
+    public static HistoryManager getDefaultHistory() {
+        return new InMemoryHistoryManager();
+    }
 }
