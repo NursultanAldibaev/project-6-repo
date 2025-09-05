@@ -4,35 +4,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Класс Epic — это особый вид задачи, который может содержать подзадачи (Subtask)
+ * Класс Эпик
  */
 public class Epic extends Task {
 
-    private final List<Integer> subtaskIds;
-
-    public Epic(String name, String description) {
-        super(name, description);
-        this.subtaskIds = new ArrayList<>();
-    }
+    private final List<Integer> subtaskIds = new ArrayList<>();
 
     /**
-     * Добавляет идентификатор подзадачи к эпику
+     * Конструктор эпика
+     *
+     * @param name        название эпика
+     * @param description описание эпика
      */
-    public void addSubtask(int id) {
+    public Epic(String name, String description)
+    {
+        super(name, description);
+        setStatus(Status.NEW);
+    }
+
+    public List<Integer> getSubtaskIds()
+    {
+        return subtaskIds;
+    }
+
+    public void addSubtaskId(int id)
+    {
         subtaskIds.add(id);
     }
 
-    /**
-     * Удаляет идентификатор подзадачи из эпика
-     */
-    public void removeSubtask(int id) {
+    public void removeSubtaskId(int id)
+    {
         subtaskIds.remove(Integer.valueOf(id));
     }
 
-    /**
-     * Возвращает список идентификаторов всех подзадач эпика
-     */
-    public List<Integer> getSubtaskIds() {
-        return subtaskIds;
+    @Override
+    public String toString()
+    {
+        return "Epic{" +
+               "id=" + getId() +
+               ", name='" + getName() + '\'' +
+               ", description='" + getDescription() + '\'' +
+               ", status=" + getStatus() +
+               ", subtaskIds=" + subtaskIds +
+               '}';
     }
+
 }
