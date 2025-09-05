@@ -1,52 +1,29 @@
 package tracker.model;
 
 /**
- * Класс, представляющий подзадачу, которая относится к определённому эпику.
- * Наследуется от {@link Task}.
+ * Подзадача, относящаяся к конкретному эпику.
  */
 public class Subtask extends Task {
-    /** Идентификатор эпика, к которому относится подзадача */
+    /** Идентификатор эпика, к которому принадлежит подзадача. */
     private int epicId;
 
     /**
-     * Создаёт новую подзадачу.
+     * Конструктор для создания подзадачи.
      *
-     * @param name        имя подзадачи
+     * @param name        название подзадачи
      * @param description описание подзадачи
-     * @param status      статус подзадачи
-     * @param epicId      идентификатор эпика, к которому она относится
+     * @param epicId      id связанного эпика
      */
-    public Subtask(String name, String description, Status status, int epicId) {
-        super(name, description, status);
+    public Subtask(String name, String description, int epicId) {
+        super(name, description);
         this.epicId = epicId;
     }
 
-    /**
-     * Возвращает идентификатор эпика, к которому относится подзадача.
-     *
-     * @return идентификатор эпика
-     */
     public int getEpicId() {
         return epicId;
     }
 
-    /**
-     * Устанавливает идентификатор эпика, к которому относится подзадача.
-     *
-     * @param epicId идентификатор эпика
-     */
     public void setEpicId(int epicId) {
         this.epicId = epicId;
-    }
-
-    /**
-     * Возвращает строковое представление подзадачи.
-     *
-     * @return строка с информацией о подзадаче
-     */
-    @Override
-    public String toString() {
-        return String.format("Subtask{id=%d, name='%s', description='%s', status=%s, epicId=%d}",
-                id, name, description, status, epicId);
     }
 }
