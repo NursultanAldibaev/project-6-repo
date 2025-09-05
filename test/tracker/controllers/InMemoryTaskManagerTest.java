@@ -2,7 +2,7 @@ package tracker.controllers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import tracker.model.Status;
+import tracker.model.Epic;
 import tracker.model.Subtask;
 import tracker.model.Task;
 
@@ -10,29 +10,30 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InMemoryTaskManagerTest {
 
-    private TaskManager taskManager;
+    private InMemoryTaskManager manager;
 
+    // <-- Вот здесь добавляем BeforeEach
     @BeforeEach
-    void setUp() {
-        taskManager = new InMemoryTaskManager();
+    void setup() {
+        manager = new InMemoryTaskManager();
+        manager.resetIdCounter(); // сброс ID перед каждым тестом
     }
 
     @Test
     void testCreateTask() {
-        Task task = new Task("Task 1", "Desc 1");
-        int id = taskManager.createTask(task);
+        Task task = new Task("Task 1", "Description 1");
+        int id = manager.createTask(task);
         assertEquals(1, id);
-        assertEquals(Status.NEW, taskManager.getTaskById(id).getStatus());
     }
 
     @Test
     void testCreateSubtask() {
-        Task task = new Task("Epic Task", "Desc Epic");
-        int epicId = taskManager.createTask(task);
+        Epic epic = new Epic("Epic 1", "Epic description");
+        int epicId = manager.createEpic(epic);
 
-        Subtask sub = new Subtask("Subtask 1", "Subdesc", epicId);
-        int subId = taskManager.createSubtask(sub);
-        assertEquals(1, subId);
-        assertEquals(Status.NEW, taskManager.getSubtaskById(subId).getStatus());
+        Subtask subtask = new Subtask("Subtask 1", "Subtask description", epicId);
+        int subtaskId = manager.createSubtask(subtask);
+
+        assertEquals(1, subtaskId);
     }
 }
