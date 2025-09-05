@@ -12,7 +12,6 @@ class InMemoryTaskManagerTest {
 
     private InMemoryTaskManager manager;
 
-    // <-- Вот здесь добавляем BeforeEach
     @BeforeEach
     void setup() {
         manager = new InMemoryTaskManager();
@@ -23,7 +22,7 @@ class InMemoryTaskManagerTest {
     void testCreateTask() {
         Task task = new Task("Task 1", "Description 1");
         int id = manager.createTask(task);
-        assertEquals(1, id);
+        assertEquals(1, id, "ID первой задачи должен быть 1");
     }
 
     @Test
@@ -34,6 +33,6 @@ class InMemoryTaskManagerTest {
         Subtask subtask = new Subtask("Subtask 1", "Subtask description", epicId);
         int subtaskId = manager.createSubtask(subtask);
 
-        assertEquals(1, subtaskId);
+        assertEquals(1, subtaskId, "ID первой подзадачи должен быть 1");
     }
 }

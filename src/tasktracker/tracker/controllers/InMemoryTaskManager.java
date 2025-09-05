@@ -18,32 +18,37 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Task> tasks = new HashMap<>();
     private final Map<Integer, Epic> epics = new HashMap<>();
     private final Map<Integer, Subtask> subtasks = new HashMap<>();
-    private int nextId = 1;
+
+    private int nextTaskId = 1;
+    private int nextEpicId = 1;
+    private int nextSubtaskId = 1;
 
     /**
      * Сброс ID (нужно для корректного прохождения тестов)
      */
     public void resetIdCounter() {
-        nextId = 1;
+        nextTaskId = 1;
+        nextEpicId = 1;
+        nextSubtaskId = 1;
     }
 
     @Override
     public int createTask(Task task) {
-        task.setId(nextId++);
+        task.setId(nextTaskId++);
         tasks.put(task.getId(), task);
         return task.getId();
     }
 
     @Override
     public int createEpic(Epic epic) {
-        epic.setId(nextId++);
+        epic.setId(nextEpicId++);
         epics.put(epic.getId(), epic);
         return epic.getId();
     }
 
     @Override
     public int createSubtask(Subtask subtask) {
-        subtask.setId(nextId++);
+        subtask.setId(nextSubtaskId++);
         subtasks.put(subtask.getId(), subtask);
 
         Epic epic = epics.get(subtask.getEpicId());
