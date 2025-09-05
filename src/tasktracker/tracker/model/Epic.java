@@ -2,7 +2,6 @@ package tracker.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * Класс, представляющий эпик — задачу, которая объединяет в себе несколько подзадач.
  */

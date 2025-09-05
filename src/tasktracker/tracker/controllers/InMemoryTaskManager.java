@@ -1,8 +1,8 @@
-package service;
+package tracker.controllers;
 
-import model.Epic;
-import model.Subtask;
-import model.Task;
+import tracker.model.Task;
+import tracker.model.Epic;
+import tracker.model.Subtask;
 
 import java.util.*;
 

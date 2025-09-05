@@ -1,5 +1,7 @@
 package tracker.controllers;
 
+import tracker.model.Task;
+
 /**
  * Утилитарный класс для получения стандартных реализаций менеджеров задач и истории.
  */

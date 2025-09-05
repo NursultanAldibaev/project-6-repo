@@ -1,6 +1,7 @@
-package service;
+package tracker.controllers;
 
-import model.Task;
+import tracker.model.Task;
+
 import java.util.*;
 
 /**
