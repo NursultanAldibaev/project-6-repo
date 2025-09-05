@@ -20,27 +20,31 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Subtask> subtasks = new HashMap<>();
     private int nextId = 1;
 
+    /**
+     * Сброс ID (нужно для корректного прохождения тестов)
+     */
+    public void resetIdCounter() {
+        nextId = 1;
+    }
+
     @Override
     public int createTask(Task task) {
-        task.setId(nextId);
-        tasks.put(nextId, task);
-        nextId++;
+        task.setId(nextId++);
+        tasks.put(task.getId(), task);
         return task.getId();
     }
 
     @Override
     public int createEpic(Epic epic) {
-        epic.setId(nextId);
-        epics.put(nextId, epic);
-        nextId++;
+        epic.setId(nextId++);
+        epics.put(epic.getId(), epic);
         return epic.getId();
     }
 
     @Override
     public int createSubtask(Subtask subtask) {
-        subtask.setId(nextId);
-        subtasks.put(nextId, subtask);
-        nextId++;
+        subtask.setId(nextId++);
+        subtasks.put(subtask.getId(), subtask);
 
         Epic epic = epics.get(subtask.getEpicId());
         if (epic != null) {
@@ -158,5 +162,4 @@ public class InMemoryTaskManager implements TaskManager {
             epic.setStatus(Status.IN_PROGRESS);
         }
     }
-
 }
