@@ -14,81 +14,67 @@ public class InMemoryTaskManager implements TaskManager {
     private final HistoryManager historyManager = Managers.getDefaultHistory();
     private int nextId = 1;
 
-    // Создание задачи
     @Override
-    public int createTask(Task task)
-    {
+    public int createTask(Task task) {
         task.setId(nextId++);
         tasks.put(task.getId(), task);
         return task.getId();
     }
 
-    // Создание эпика
     @Override
-    public int createEpic(Epic epic)
-    {
+    public int createEpic(Epic epic) {
         epic.setId(nextId++);
         epics.put(epic.getId(), epic);
         return epic.getId();
     }
 
-    // Создание подзадачи
     @Override
-    public int createSubtask(Subtask subtask)
-    {
+    public int createSubtask(Subtask subtask) {
         subtask.setId(nextId++);
         subtasks.put(subtask.getId(), subtask);
-
         Epic epic = epics.get(subtask.getEpicId());
-        if (epic != null)
-        {
+        if (epic != null) {
             epic.addSubtask(subtask.getId());
         }
         return subtask.getId();
     }
 
     @Override
-    public Task getTask(int id)
-    {
+    public Task getTask(int id) {
         Task task = tasks.get(id);
-        if (task != null)
-        {
+        if (task != null) {
             historyManager.add(task);
         }
         return task;
     }
 
     @Override
-    public Epic getEpic(int id)
-    {
+    public Epic getEpic(int id) {
         Epic epic = epics.get(id);
-        if (epic != null)
-        {
+        if (epic != null) {
             historyManager.add(epic);
         }
         return epic;
     }
 
     @Override
-    public Subtask getSubtask(int id)
-    {
+    public Subtask getSubtask(int id) {
         Subtask subtask = subtasks.get(id);
-        if (subtask != null)
-        {
+        if (subtask != null) {
             historyManager.add(subtask);
         }
         return subtask;
     }
 
     @Override
-    public List<Task> getHistory()
-    {
+    public List<Task> getHistory() {
         return historyManager.getHistory();
     }
 
     @Override
-    public List<Subtask> getAllSubtasks()
-    {
+    public List<Subtask> getAllSubtasks() {
         return new ArrayList<>(subtasks.values());
     }
+
+    // Здесь можно добавить другие методы обновления и удаления задач
 }
