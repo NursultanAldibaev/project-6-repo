@@ -1,66 +1,48 @@
-package tracker.controllers;
+package tasktracker.tracker.controllers;
 
-import tracker.model.Task;
-
+import tasktracker.tracker.model.Task;
 import java.util.*;
 
-/**
- * Реализация интерфейса HistoryManager.
- * Хранит историю просмотров задач в памяти с помощью двусвязного списка и HashMap.
- *
- * - Двусвязный список нужен для быстрого обхода истории (от head до tail).
- * - HashMap<id, Node> позволяет находить и удалять задачи из истории за O(1).
- */
 public class InMemoryHistoryManager implements HistoryManager {
-
-    /** Хранение ссылок на узлы списка по id задачи (для быстрого доступа). */
-    private final Map<Integer, Node> nodeMap = new HashMap<>();
-
-    /** Начало (head) и конец (tail) двусвязного списка. */
+    private final Map<Integer, Node> historyMap = new HashMap<>();
     private Node head;
     private Node tail;
 
-    /**
-     * Добавляет задачу в историю.
-     * Если задача уже есть — удаляется старая запись и создаётся новая в конце списка.
-     *
-     * @param task задача для добавления в историю
-     */
+    private static class Node {
+        Task task;
+        Node prev;
+        Node next;
+
+        Node(Task task) { this.task = task; }
+    }
+
     @Override
     public void add(Task task) {
-        if (task == null) {
-            return;
-        }
-
-        // если уже есть в истории — удаляем старую запись
-        if (nodeMap.containsKey(task.getId())) {
-            remove(task.getId());
-        }
-
-        // добавляем в конец списка
+        remove(task.getId());
         linkLast(task);
     }
 
-    /**
-     * Удаляет задачу из истории по её id.
-     * Используется при удалении задачи из основного менеджера.
-     *
-     * @param id идентификатор задачи
-     */
-    @Override
-    public void remove(int id) {
-        Node node = nodeMap.remove(id);
-        if (node != null) {
-            removeNode(node);
+    private void linkLast(Task task) {
+        Node node = new Node(task);
+        if (tail == null) {
+            head = tail = node;
+        } else {
+            tail.next = node;
+            node.prev = tail;
+            tail = node;
         }
+        historyMap.put(task.getId(), node);
     }
 
-    /**
-     * Возвращает историю просмотров задач.
-     * История возвращается в порядке от самой старой к самой новой.
-     *
-     * @return список просмотренных задач
-     */
+    private void remove(int id) {
+        Node node = historyMap.remove(id);
+        if (node == null) return;
+        if (node.prev != null) node.prev.next = node.next;
+        else head = node.next;
+        if (node.next != null) node.next.prev = node.prev;
+        else tail = node.prev;
+    }
+
     @Override
     public List<Task> getHistory() {
         List<Task> history = new ArrayList<>();
@@ -70,69 +52,5 @@ public class InMemoryHistoryManager implements HistoryManager {
             current = current.next;
         }
         return history;
-    }
-
-    // ======================= внутренние методы =======================
-
-    /**
-     * Добавляет задачу в конец двусвязного списка.
-     *
-     * @param task задача для добавления
-     */
-    private void linkLast(Task task) {
-        Node newNode = new Node(task);
-
-        if (tail == null) {
-            // список пуст — новый элемент становится головой
-            head = newNode;
-        } else {
-            // привязать новый узел к текущему хвосту
-            tail.next = newNode;
-            newNode.prev = tail;
-        }
-
-        // обновить хвост списка
-        tail = newNode;
-
-        // сохранить ссылку на узел в HashMap
-        nodeMap.put(task.getId(), newNode);
-    }
-
-    /**
-     * Удаляет узел из двусвязного списка.
-     *
-     * @param node узел для удаления
-     */
-    private void removeNode(Node node) {
-        Node prev = node.prev;
-        Node next = node.next;
-
-        if (prev != null) {
-            prev.next = next;
-        } else {
-            // если удаляется голова
-            head = next;
-        }
-
-        if (next != null) {
-            next.prev = prev;
-        } else {
-            // если удаляется хвост
-            tail = prev;
-        }
-    }
-
-    /**
-     * Узел двусвязного списка.
-     * Хранит ссылку на задачу и ссылки на предыдущий/следующий узлы.
-     */
-    private static class Node {
-        Task task;
-        Node prev;
-        Node next;
-
-        Node(Task task) {
-            this.task = task;
-        }
     }
 }
