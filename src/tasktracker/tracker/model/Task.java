@@ -16,56 +16,46 @@ public class Task {
      * @param name        название задачи
      * @param description описание задачи
      */
-    public Task(String name, String description)
-    {
+    public Task(String name, String description) {
         this.name = name;
         this.description = description;
         this.status = Status.NEW;
     }
 
-    public int getId()
-    {
+    public int getId() {
         return id;
     }
 
-    public void setId(int id)
-    {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getDescription()
-    {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description)
-    {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public Status getStatus()
-    {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Status status)
-    {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Task{" +
                "id=" + id +
                ", name='" + name + '\'' +
