@@ -9,9 +9,9 @@ import java.util.*;
 /**
  * Реализация интерфейса TaskManager.
  * Хранит все задачи, эпики и подзадачи в памяти с использованием HashMap.
- * - Каждой сущности присваивается уникальный id.
- * - Для эпиков автоматически поддерживается список связанных подзадач.
- * - Интеграция с HistoryManager: при получении и удалении задач обновляется история.
+ * Каждой сущности присваивается уникальный id.
+ * Для эпиков автоматически поддерживается список связанных подзадач.
+ * Интеграция с HistoryManager: при получении и удалении задач обновляется история.
  */
 public class InMemoryTaskManager implements TaskManager {
 
@@ -30,30 +30,21 @@ public class InMemoryTaskManager implements TaskManager {
     /** Менеджер истории просмотров */
     private final HistoryManager historyManager = Managers.getDefaultHistory();
 
-    /**
-     * Создание обычной задачи.
-     * Присваивается новый id и сохраняется в HashMap.
-     */
+    /** Создание обычной задачи. Присваивается новый id и сохраняется в HashMap */
     @Override
     public void createTask(Task task) {
         task.setId(++idCounter);
         tasks.put(task.getId(), task);
     }
 
-    /**
-     * Создание эпика.
-     * У эпика также будет свой список подзадач.
-     */
+    /** Создание эпика. У эпика также будет свой список подзадач */
     @Override
     public void createEpic(Epic epic) {
         epic.setId(++idCounter);
         epics.put(epic.getId(), epic);
     }
 
-    /**
-     * Создание подзадачи.
-     * Подзадача связывается с эпиком по epicId.
-     */
+    /** Создание подзадачи. Подзадача связывается с эпиком по epicId */
     @Override
     public void createSubtask(Subtask subtask) {
         subtask.setId(++idCounter);
@@ -65,10 +56,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    /**
-     * Получение задачи по id.
-     * При этом добавляется в историю просмотров.
-     */
+    /** Получение задачи по id. Добавляется в историю просмотров */
     @Override
     public Task getTask(int id) {
         Task task = tasks.get(id);
@@ -76,10 +64,7 @@ public class InMemoryTaskManager implements TaskManager {
         return task;
     }
 
-    /**
-     * Получение эпика по id.
-     * При этом добавляется в историю просмотров.
-     */
+    /** Получение эпика по id. Добавляется в историю просмотров */
     @Override
     public Epic getEpic(int id) {
         Epic epic = epics.get(id);
@@ -87,10 +72,7 @@ public class InMemoryTaskManager implements TaskManager {
         return epic;
     }
 
-    /**
-     * Получение подзадачи по id.
-     * При этом добавляется в историю просмотров.
-     */
+    /** Получение подзадачи по id. Добавляется в историю просмотров */
     @Override
     public Subtask getSubtask(int id) {
         Subtask subtask = subtasks.get(id);
@@ -98,61 +80,45 @@ public class InMemoryTaskManager implements TaskManager {
         return subtask;
     }
 
-    /**
-     * Обновление обычной задачи (перезапись по id).
-     */
+    /** Обновление обычной задачи (перезапись по id) */
     @Override
     public void updateTask(Task task) {
         tasks.put(task.getId(), task);
     }
 
-    /**
-     * Обновление эпика (перезапись по id).
-     */
+    /** Обновление эпика (перезапись по id) */
     @Override
     public void updateEpic(Epic epic) {
         epics.put(epic.getId(), epic);
     }
 
-    /**
-     * Обновление подзадачи (перезапись по id).
-     */
+    /** Обновление подзадачи (перезапись по id) */
     @Override
     public void updateSubtask(Subtask subtask) {
         subtasks.put(subtask.getId(), subtask);
     }
 
-    /**
-     * Удаление задачи по id.
-     * Также очищается из истории.
-     */
+    /** Удаление задачи по id. Также очищается из истории */
     @Override
     public void deleteTaskById(int id) {
         tasks.remove(id);
-        historyManager.remove(id); // удаляем из истории
+        historyManager.remove(id);
     }
 
-    /**
-     * Удаление эпика по id.
-     * При этом также удаляются все связанные подзадачи
-     * и очищаются из истории.
-     */
+    /** Удаление эпика по id. Удаляются все связанные подзадачи и история */
     @Override
     public void deleteEpicById(int id) {
         Epic epic = epics.remove(id);
         if (epic != null) {
             for (Subtask subtask : epic.getSubtasks()) {
                 subtasks.remove(subtask.getId());
-                historyManager.remove(subtask.getId()); // удаляем подзадачи из истории
+                historyManager.remove(subtask.getId());
             }
         }
-        historyManager.remove(id); // удаляем сам эпик из истории
+        historyManager.remove(id);
     }
 
-    /**
-     * Удаление подзадачи по id.
-     * Также обновляется список подзадач у эпика.
-     */
+    /** Удаление подзадачи по id. Также обновляется список подзадач у эпика */
     @Override
     public void deleteSubtaskById(int id) {
         Subtask subtask = subtasks.remove(id);
@@ -162,12 +128,10 @@ public class InMemoryTaskManager implements TaskManager {
                 epic.getSubtasks().remove(subtask);
             }
         }
-        historyManager.remove(id); // удаляем подзадачу из истории
+        historyManager.remove(id);
     }
 
-    /**
-     * Получение истории просмотров задач.
-     */
+    /** Получение истории просмотров задач */
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
