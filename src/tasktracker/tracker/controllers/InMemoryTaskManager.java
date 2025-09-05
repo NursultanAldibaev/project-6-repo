@@ -22,22 +22,25 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int createTask(Task task) {
-        task.setId(nextId++);
-        tasks.put(task.getId(), task);
+        task.setId(nextId);
+        tasks.put(nextId, task);
+        nextId++;
         return task.getId();
     }
 
     @Override
     public int createEpic(Epic epic) {
-        epic.setId(nextId++);
-        epics.put(epic.getId(), epic);
+        epic.setId(nextId);
+        epics.put(nextId, epic);
+        nextId++;
         return epic.getId();
     }
 
     @Override
     public int createSubtask(Subtask subtask) {
-        subtask.setId(nextId++);
-        subtasks.put(subtask.getId(), subtask);
+        subtask.setId(nextId);
+        subtasks.put(nextId, subtask);
+        nextId++;
 
         Epic epic = epics.get(subtask.getEpicId());
         if (epic != null) {
@@ -155,4 +158,5 @@ public class InMemoryTaskManager implements TaskManager {
             epic.setStatus(Status.IN_PROGRESS);
         }
     }
+
 }
