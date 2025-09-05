@@ -1,4 +1,4 @@
-package TaskTracker;
+package tasktracker;
 
 import tracker.model.*;
 import tracker.model.Status;
