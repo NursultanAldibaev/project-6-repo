@@ -4,7 +4,6 @@ import tasktracker.tracker.controllers.InMemoryTaskManager;
 import tasktracker.tracker.model.Task;
 import tasktracker.tracker.model.Epic;
 import tasktracker.tracker.model.Subtask;
-import tasktracker.tracker.model.Status;
 
 public class Main {
     public static void main(String[] args) {
