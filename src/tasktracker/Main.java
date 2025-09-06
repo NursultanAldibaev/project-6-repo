@@ -8,7 +8,7 @@ import tracker.model.Task;
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager manager = new InMemoryTaskManager();
+        InMemoryTaskManager manager = new InMemoryTaskManager();
 
         Task task1 = new Task("Task 1", "Description 1");
         Task task2 = new Task("Task 2", "Description 2");
@@ -20,14 +20,21 @@ public class Main {
         manager.createSubtask(sub1);
         manager.createSubtask(sub2);
 
-        System.out.println("All tasks:");
-        for (Task task : manager.getAllTasks()) {
-            System.out.println(task);
+        manager.getTaskById(task1.getId());
+        manager.getTaskById(task2.getId());
+        manager.getSubtaskById(sub1.getId());
+        manager.getTaskById(task1.getId()); // повтор, перемещается в конец
+
+        System.out.println("История просмотров:");
+        for (Task t : manager.getHistory()) {
+            System.out.println(t);
         }
 
-        System.out.println("All subtasks:");
-        for (Subtask subtask : manager.getAllSubtasks()) {
-            System.out.println(subtask);
+        manager.deleteTask(task2.getId());
+
+        System.out.println("\nИстория после удаления Task 2:");
+        for (Task t : manager.getHistory()) {
+            System.out.println(t);
         }
     }
 }
