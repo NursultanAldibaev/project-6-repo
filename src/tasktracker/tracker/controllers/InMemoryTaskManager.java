@@ -5,7 +5,10 @@ import tracker.model.Epic;
 import tracker.model.Subtask;
 import tracker.model.Status;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Реализация TaskManager в памяти с интеграцией истории просмотров.
@@ -21,6 +24,9 @@ public class InMemoryTaskManager implements TaskManager {
     private int nextEpicId = 1;
     private int nextSubtaskId = 1;
 
+    /**
+     * Сброс ID (нужно для корректного прохождения тестов)
+     */
     public void resetIdCounter() {
         nextTaskId = 1;
         nextEpicId = 1;
@@ -148,10 +154,20 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
+    /**
+     * Возвращает историю просмотров задач.
+     *
+     * @return список задач в порядке просмотра
+     */
     public List<Task> getHistory() {
         return historyManager.getHistory();
     }
 
+    /**
+     * Обновляет статус эпика в зависимости от статусов подзадач.
+     *
+     * @param epic эпик для обновления
+     */
     private void updateEpicStatus(Epic epic) {
         List<Integer> subIds = epic.getSubtaskIds();
         if (subIds.isEmpty()) {

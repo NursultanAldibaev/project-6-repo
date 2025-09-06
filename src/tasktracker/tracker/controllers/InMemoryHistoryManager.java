@@ -1,12 +1,10 @@
 package tracker.controllers;
 
 import tracker.model.Task;
-
 import java.util.*;
 
 /**
- * Менеджер истории просмотров задач.
- * Реализован с помощью двусвязного списка и HashMap для O(1) удаления повторов.
+ * Реализация истории просмотров задач в памяти с поддержкой удаления и уникальности.
  */
 public class InMemoryHistoryManager implements HistoryManager {
 
@@ -15,14 +13,12 @@ public class InMemoryHistoryManager implements HistoryManager {
         Node prev;
         Node next;
 
-        Node(Node prev, Task task, Node next) {
-            this.prev = prev;
+        Node(Task task) {
             this.task = task;
-            this.next = next;
         }
     }
 
-    private final Map<Integer, Node> nodeMap = new HashMap<>();
+    private final Map<Integer, Node> nodes = new HashMap<>();
     private Node head;
     private Node tail;
 
@@ -31,17 +27,13 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (task == null) {
             return;
         }
-        remove(task.getId()); // удаляем старую запись, если есть
+        remove(task.getId());
         linkLast(task);
     }
 
-    /**
-     * Удаляет задачу из истории по id.
-     *
-     * @param id идентификатор задачи
-     */
+    @Override
     public void remove(int id) {
-        Node node = nodeMap.remove(id);
+        Node node = nodes.remove(id);
         if (node != null) {
             removeNode(node);
         }
@@ -59,14 +51,16 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private void linkLast(Task task) {
-        Node newNode = new Node(tail, task, null);
-        if (tail != null) {
-            tail.next = newNode;
-        } else {
+        Node newNode = new Node(task);
+        if (tail == null) {
             head = newNode;
+            tail = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
         }
-        tail = newNode;
-        nodeMap.put(task.getId(), newNode);
+        nodes.put(task.getId(), newNode);
     }
 
     private void removeNode(Node node) {
