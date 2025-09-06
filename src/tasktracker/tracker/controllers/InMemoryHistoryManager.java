@@ -1,7 +1,6 @@
 package tracker.controllers;
 
 import tracker.model.Task;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +8,7 @@ import java.util.Map;
 
 /**
  * Реализация истории просмотров задач в памяти.
+ * <p>
  * Поддерживает:
  * <ul>
  *     <li>Неограниченную историю</li>
@@ -22,32 +22,26 @@ public class InMemoryHistoryManager implements HistoryManager {
      * Узел двусвязного списка, хранящий задачу.
      */
     private static class Node {
-        Task task;
+        final Task task;
         Node prev;
         Node next;
 
-        Node(Task task) {
+        Node(final Task task) {
             this.task = task;
         }
     }
 
-    /** Словарь для быстрого доступа к узлам по ID задачи */
+    /** Словарь для быстрого доступа к узлам по ID задачи. */
     private final Map<Integer, Node> nodes = new HashMap<>();
 
-    /** Голова двусвязного списка */
+    /** Голова двусвязного списка. */
     private Node head;
 
-    /** Хвост двусвязного списка */
+    /** Хвост двусвязного списка. */
     private Node tail;
 
-    /**
-     * Добавляет задачу в историю просмотров.
-     * Если задача уже есть, перемещает её в конец истории.
-     *
-     * @param task задача для добавления
-     */
     @Override
-    public void add(Task task) {
+    public void add(final Task task) {
         if (task == null) {
             return;
         }
@@ -55,26 +49,17 @@ public class InMemoryHistoryManager implements HistoryManager {
         linkLast(task);
     }
 
-    /**
-     * Удаляет задачу из истории по её ID.
-     *
-     * @param id ID задачи
-     */
-    public void remove(int id) {
-        Node node = nodes.remove(id);
+    @Override
+    public void remove(final int id) {
+        final Node node = nodes.remove(id);
         if (node != null) {
             removeNode(node);
         }
     }
 
-    /**
-     * Возвращает историю просмотров задач в порядке просмотра.
-     *
-     * @return список задач
-     */
     @Override
     public List<Task> getHistory() {
-        List<Task> history = new ArrayList<>();
+        final List<Task> history = new ArrayList<>();
         Node current = head;
         while (current != null) {
             history.add(current.task);
@@ -88,8 +73,8 @@ public class InMemoryHistoryManager implements HistoryManager {
      *
      * @param task задача для добавления
      */
-    private void linkLast(Task task) {
-        Node newNode = new Node(task);
+    private void linkLast(final Task task) {
+        final Node newNode = new Node(task);
         if (tail == null) {
             head = newNode;
             tail = newNode;
@@ -106,7 +91,7 @@ public class InMemoryHistoryManager implements HistoryManager {
      *
      * @param node узел для удаления
      */
-    private void removeNode(Node node) {
+    private void removeNode(final Node node) {
         if (node.prev != null) {
             node.prev.next = node.next;
         } else {
@@ -118,5 +103,9 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else {
             tail = node.prev;
         }
+
+        // Очистка ссылок для предотвращения утечек памяти
+        node.prev = null;
+        node.next = null;
     }
 }
