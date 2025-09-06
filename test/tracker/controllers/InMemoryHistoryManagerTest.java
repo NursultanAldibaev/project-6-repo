@@ -28,7 +28,9 @@ class InMemoryHistoryManagerTest {
     @Test
     void testAddTaskToHistory() {
         final Task task1 = new Task("Task 1", "Desc 1");
+        task1.setId(1);
         final Task task2 = new Task("Task 2", "Desc 2");
+        task2.setId(2);
 
         historyManager.add(task1);
         historyManager.add(task2);
@@ -45,7 +47,9 @@ class InMemoryHistoryManagerTest {
     @Test
     void testAddDuplicateMovesToEnd() {
         final Task task1 = new Task("Task 1", "Desc 1");
+        task1.setId(1);
         final Task task2 = new Task("Task 2", "Desc 2");
+        task2.setId(2);
 
         historyManager.add(task1);
         historyManager.add(task2);
@@ -63,7 +67,9 @@ class InMemoryHistoryManagerTest {
     @Test
     void testRemoveTaskFromHistory() {
         final Task task1 = new Task("Task 1", "Desc 1");
+        task1.setId(1);
         final Task task2 = new Task("Task 2", "Desc 2");
+        task2.setId(2);
 
         historyManager.add(task1);
         historyManager.add(task2);
@@ -80,6 +86,7 @@ class InMemoryHistoryManagerTest {
     @Test
     void testRemoveNonExistentTask() {
         final Task task1 = new Task("Task 1", "Desc 1");
+        task1.setId(1);
 
         historyManager.add(task1);
         historyManager.remove(999); // несуществующий ID
