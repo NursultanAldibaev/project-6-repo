@@ -1,153 +1,44 @@
 package tracker.controllers;
 
-import tracker.model.*;
+import tracker.model.Task;
+import tracker.model.Epic;
+import tracker.model.Subtask;
+
 import java.util.List;
 
 /**
- * Интерфейс для управления задачами, эпиками и подзадачами.
- * Делаем методы для создания, обновления, удаления и получения объектов,
- * а также получения истории просмотров.
+ * Интерфейс менеджера задач
  */
 public interface TaskManager {
 
-    /**
-     * Создаёт новую задачу.
-     *
-     * @param task задача для создания
-     * @return уникальный идентификатор созданной задачи
-     */
     int createTask(Task task);
 
-    /**
-     * Создаёт новый эпик.
-     *
-     * @param epic эпик для создания
-     * @return уникальный идентификатор созданного эпика
-     */
     int createEpic(Epic epic);
 
-    /**
-     * Создаёт новую подзадачу.
-     *
-     * @param subtask подзадача для создания
-     * @return уникальный идентификатор созданной подзадачи
-     */
     int createSubtask(Subtask subtask);
 
-    /**
-     * Обновляет существующую задачу.
-     *
-     * @param task обновлённая задача
-     */
-    void updateTask(Task task);
+    Task getTaskById(int id);
 
-    /**
-     * Обновляет существующий эпик.
-     *
-     * @param epic обновлённый эпик
-     */
-    void updateEpic(Epic epic);
+    Epic getEpicById(int id);
 
-    /**
-     * Обновляет существующую подзадачу.
-     *
-     * @param subtask обновлённая подзадача
-     */
-    void updateSubtask(Subtask subtask);
+    Subtask getSubtaskById(int id);
 
-    /**
-     * Удаляет задачу по её идентификатору.
-     *
-     * @param id идентификатор задачи
-     */
-    void deleteTaskById(int id);
-
-    /**
-     * Удаляет эпик по его идентификатору.
-     *
-     * @param id идентификатор эпика
-     */
-    void deleteEpicById(int id);
-
-    /**
-     * Удаляет подзадачу по её идентификатору.
-     *
-     * @param id идентификатор подзадачи
-     */
-    void deleteSubtaskById(int id);
-
-    /**
-     * Удаляет все задачи.
-     */
-    void deleteTasks();
-
-    /**
-     * Удаляет все подзадачи.
-     */
-    void deleteSubtasks();
-
-    /**
-     * Удаляет все эпики и связанные с ними подзадачи.
-     */
-    void deleteEpics();
-
-    /**
-     * Возвращает список всех задач.
-     *
-     * @return список задач
-     */
     List<Task> getAllTasks();
 
-    /**
-     * Возвращает список всех эпиков.
-     *
-     * @return список эпиков
-     */
     List<Epic> getAllEpics();
 
-    /**
-     * Возвращает список всех подзадач.
-     *
-     * @return список подзадач
-     */
-    List<Subtask> getAllSubtasks();
+    List<Subtask> getAllSubtasks(); // Исправлено: без аргументов
 
-    /**
-     * Возвращает задачу по её идентификатору.
-     *
-     * @param id идентификатор задачи
-     * @return задача или {@code null}, если не найдена
-     */
-    Task getTask(int id);
+    void updateTask(Task task);
 
-    /**
-     * Возвращает эпик по его идентификатору.
-     *
-     * @param id идентификатор эпика
-     * @return эпик или {@code null}, если не найден
-     */
-    Epic getEpic(int id);
+    void updateEpic(Epic epic);
 
-    /**
-     * Возвращает подзадачу по её идентификатору.
-     *
-     * @param id идентификатор подзадачи
-     * @return подзадача или {@code null}, если не найдена
-     */
-    Subtask getSubtask(int id);
+    void updateSubtask(Subtask subtask);
 
-    /**
-     * Возвращает список подзадач, относящихся к указанному эпику.
-     *
-     * @param epicId идентификатор эпика
-     * @return список подзадач
-     */
-    List<Subtask> getEpicSubtasks(int epicId);
+    void deleteTask(int id);
 
-    /**
-     * Возвращает историю просмотров задач.
-     *
-     * @return список просмотренных задач в порядке обращения
-     */
-    List<Task> getHistory();
+    void deleteEpic(int id);
+
+    void deleteSubtask(int id);
+
 }

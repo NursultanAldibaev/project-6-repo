@@ -2,40 +2,110 @@ package tracker.controllers;
 
 import tracker.model.Task;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Реализация {@link HistoryManager}, и она хранит историю задач в памяти.
- * Сохраняются последние 10 задач. Если же задач будет больше 10, то самая старая задача удаляется.
+ * Реализация истории просмотров задач в памяти.
+ * <p>
+ * Поддерживает:
+ * <ul>
+ *     <li>Неограниченную историю</li>
+ *     <li>Удаление задач по ID</li>
+ *     <li>Уникальность задач в истории (повторный просмотр перемещает задачу в конец)</li>
+ * </ul>
  */
 public class InMemoryHistoryManager implements HistoryManager {
 
     /**
-     * Список задач, представляющий историю.
+     * Узел двусвязного списка, хранящий задачу.
      */
-    private final List<Task> history = new ArrayList<>();
+    private static class Node {
+        final Task task;
+        Node prev;
+        Node next;
 
-    /**
-     * Добавляет задачу в историю. Если история уже содержит 10 задач,
-     * удаляет самую старую перед добавлением новой.
-     *
-     * @param task задача для добавления
-     */
-    @Override
-    public void add(Task task) {
-        if (history.size() == 10) {
-            history.remove(0);
+        Node(final Task task) {
+            this.task = task;
         }
-        history.add(task);
+    }
+
+    /** Словарь для быстрого доступа к узлам по ID задачи. */
+    private final Map<Integer, Node> nodes = new HashMap<>();
+
+    /** Голова двусвязного списка. */
+    private Node head;
+
+    /** Хвост двусвязного списка. */
+    private Node tail;
+
+    @Override
+    public void add(final Task task) {
+        if (task == null) {
+            return;
+        }
+        remove(task.getId());
+        linkLast(task);
+    }
+
+    @Override
+    public void remove(final int id) {
+        final Node node = nodes.remove(id);
+        if (node != null) {
+            removeNode(node);
+        }
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        final List<Task> history = new ArrayList<>();
+        Node current = head;
+        while (current != null) {
+            history.add(current.task);
+            current = current.next;
+        }
+        return history;
     }
 
     /**
-     * Возвращает копию списка задач из истории.
+     * Добавляет задачу в конец двусвязного списка.
      *
-     * @return список задач в порядке добавления
+     * @param task задача для добавления
      */
-    @Override
-    public List<Task> getHistory() {
-        return new ArrayList<>(history);
+    private void linkLast(final Task task) {
+        final Node newNode = new Node(task);
+        if (tail == null) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
+        }
+        nodes.put(task.getId(), newNode);
+    }
+
+    /**
+     * Удаляет узел из двусвязного списка.
+     *
+     * @param node узел для удаления
+     */
+    private void removeNode(final Node node) {
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        } else {
+            head = node.next;
+        }
+
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        } else {
+            tail = node.prev;
+        }
+
+        // Очистка ссылок для предотвращения утечек памяти
+        node.prev = null;
+        node.next = null;
     }
 }

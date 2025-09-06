@@ -1,65 +1,32 @@
-package TaskTracker;
+package tasktracker;
 
-import tracker.model.*;
-import tracker.model.Status;
-import tracker.controllers.Managers;
-import tracker.controllers.TaskManager;
+import tracker.controllers.InMemoryTaskManager;
+import tracker.model.Subtask;
+import tracker.model.Task;
 
 public class Main {
+
     public static void main(String[] args) {
-        TaskManager manager = Managers.getDefault();
+        InMemoryTaskManager manager = new InMemoryTaskManager();
 
-        // Создание задач
-        Task task1 = new Task("Починить баг", "Ошибка в отчёте", Status.NEW);
-        Task task2 = new Task("Проверить отчёт", "После починки", Status.NEW);
-        Epic epic1 = new Epic("Рефакторинг", "Улучшить структуру кода");
-        Subtask sub1 = new Subtask("Переделать TaskManager", "Сделать интерфейсом", Status.NEW, 0);
-        Subtask sub2 = new Subtask("Добавить историю", "Через отдельный класс", Status.NEW, 0);
+        Task task1 = new Task("Task 1", "Description 1");
+        Task task2 = new Task("Task 2", "Description 2");
+        manager.createTask(task1);
+        manager.createTask(task2);
 
-        int task1Id = manager.createTask(task1);
-        int task2Id = manager.createTask(task2);
-        int epic1Id = manager.createEpic(epic1);
+        Subtask sub1 = new Subtask("Subtask 1", "Subdesc 1", 0);
+        Subtask sub2 = new Subtask("Subtask 2", "Subdesc 2", 0);
+        manager.createSubtask(sub1);
+        manager.createSubtask(sub2);
 
-        // Связываем подзадачи с эпиком
-        sub1.setEpicId(epic1Id);
-        sub2.setEpicId(epic1Id);
-
-        int sub1Id = manager.createSubtask(sub1);
-        int sub2Id = manager.createSubtask(sub2);
-
-        // Получаем задачи (добавляются в историю)
-        manager.getTask(task1Id);
-        manager.getEpic(epic1Id);
-        manager.getSubtask(sub1Id);
-        manager.getSubtask(sub2Id);
-        manager.getTask(task2Id);
-        manager.getEpic(epic1Id); // повторно
-
-        printAll(manager);
-    }
-
-    private static void printAll(TaskManager manager) {
-        System.out.println("Задачи:");
+        System.out.println("All tasks:");
         for (Task task : manager.getAllTasks()) {
             System.out.println(task);
         }
 
-        System.out.println("\nЭпики:");
-        for (Epic epic : manager.getAllEpics()) {
-            System.out.println(epic);
-            for (Subtask subtask : manager.getEpicSubtasks(epic.getId())) {
-                System.out.println("  --> " + subtask);
-            }
-        }
-
-        System.out.println("\nПодзадачи:");
+        System.out.println("All subtasks:");
         for (Subtask subtask : manager.getAllSubtasks()) {
             System.out.println(subtask);
-        }
-
-        System.out.println("\nИстория:");
-        for (Task t : manager.getHistory()) {
-            System.out.println(t);
         }
     }
 }
