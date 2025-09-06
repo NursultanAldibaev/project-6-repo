@@ -11,6 +11,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Тесты для InMemoryTaskManager.
+ * Проверяется интеграция с InMemoryHistoryManager, создание, удаление и история задач.
+ */
 class InMemoryTaskManagerTest {
 
     private InMemoryTaskManager manager;
@@ -21,6 +25,9 @@ class InMemoryTaskManagerTest {
         manager.resetIdCounter();
     }
 
+    /**
+     * Проверка добавления задачи в историю после получения по ID.
+     */
     @Test
     void testCreateAndGetTaskAddsToHistory() {
         Task task = new Task("Task 1", "Description 1");
@@ -32,6 +39,9 @@ class InMemoryTaskManagerTest {
         assertEquals(task, history.get(0));
     }
 
+    /**
+     * Проверка добавления подзадачи в историю.
+     */
     @Test
     void testCreateAndGetSubtaskAddsToHistory() {
         Epic epic = new Epic("Epic 1", "Epic description");
@@ -46,6 +56,9 @@ class InMemoryTaskManagerTest {
         assertEquals(subtask, history.get(0));
     }
 
+    /**
+     * Проверка удаления задачи из менеджера и истории.
+     */
     @Test
     void testDeleteTaskRemovesFromHistory() {
         Task task1 = new Task("Task 1", "Desc 1");
@@ -62,6 +75,9 @@ class InMemoryTaskManagerTest {
         assertEquals(task2, history.get(0));
     }
 
+    /**
+     * Проверка удаления эпика вместе с его подзадачами из истории.
+     */
     @Test
     void testDeleteEpicRemovesEpicAndSubtasksFromHistory() {
         Epic epic = new Epic("Epic 1", "Desc Epic");
@@ -81,6 +97,9 @@ class InMemoryTaskManagerTest {
         assertTrue(history.isEmpty(), "История должна быть пустой после удаления эпика и его подзадач");
     }
 
+    /**
+     * Проверка, что повторный доступ к задаче не увеличивает историю.
+     */
     @Test
     void testDuplicateAccessMovesTaskToEnd() {
         Task task = new Task("Task 1", "Desc 1");

@@ -12,20 +12,23 @@ import java.util.Map;
 
 /**
  * Реализация TaskManager в памяти с интеграцией истории просмотров.
+ * История просмотров реализована через InMemoryHistoryManager.
  */
 public class InMemoryTaskManager implements TaskManager {
 
     private final Map<Integer, Task> tasks = new HashMap<>();
     private final Map<Integer, Epic> epics = new HashMap<>();
     private final Map<Integer, Subtask> subtasks = new HashMap<>();
-    private final HistoryManager historyManager = new InMemoryHistoryManager();
+
+    /** Менеджер истории просмотров задач */
+    private final InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
     private int nextTaskId = 1;
     private int nextEpicId = 1;
     private int nextSubtaskId = 1;
 
     /**
-     * Сброс ID (нужно для корректного прохождения тестов)
+     * Сбрасывает счетчики ID задач, эпиков и подзадач.
      */
     public void resetIdCounter() {
         nextTaskId = 1;
@@ -155,7 +158,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     /**
-     * Возвращает историю просмотров задач.
+     * Возвращает текущую историю просмотров задач.
      *
      * @return список задач в порядке просмотра
      */
@@ -164,7 +167,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     /**
-     * Обновляет статус эпика в зависимости от статусов подзадач.
+     * Обновляет статус эпика в зависимости от статусов его подзадач.
      *
      * @param epic эпик для обновления
      */
@@ -179,12 +182,12 @@ public class InMemoryTaskManager implements TaskManager {
         boolean allDone = true;
 
         for (int id : subIds) {
-            Subtask s = subtasks.get(id);
-            if (s != null) {
-                if (s.getStatus() != Status.DONE) {
+            Subtask subtask = subtasks.get(id);
+            if (subtask != null) {
+                if (subtask.getStatus() != Status.DONE) {
                     allDone = false;
                 }
-                if (s.getStatus() != Status.NEW) {
+                if (subtask.getStatus() != Status.NEW) {
                     allNew = false;
                 }
             }

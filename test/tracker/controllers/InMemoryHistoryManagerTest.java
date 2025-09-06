@@ -9,15 +9,22 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Тесты для InMemoryHistoryManager.
+ * Проверяется добавление, удаление и корректная обработка дубликатов в истории.
+ */
 class InMemoryHistoryManagerTest {
 
-    private HistoryManager historyManager;
+    private InMemoryHistoryManager historyManager;
 
     @BeforeEach
     void setUp() {
         historyManager = new InMemoryHistoryManager();
     }
 
+    /**
+     * Проверка добавления задач в историю.
+     */
     @Test
     void testAddTaskToHistory() {
         Task task1 = new Task("Task 1", "Desc 1");
@@ -32,6 +39,9 @@ class InMemoryHistoryManagerTest {
         assertEquals(task2, history.get(1));
     }
 
+    /**
+     * Проверка того, что дубликаты перемещаются в конец истории.
+     */
     @Test
     void testAddDuplicateMovesToEnd() {
         Task task1 = new Task("Task 1", "Desc 1");
@@ -47,6 +57,9 @@ class InMemoryHistoryManagerTest {
         assertEquals(task1, history.get(1), "Task1 должен переместиться в конец");
     }
 
+    /**
+     * Проверка удаления задачи из истории.
+     */
     @Test
     void testRemoveTaskFromHistory() {
         Task task1 = new Task("Task 1", "Desc 1");
@@ -61,6 +74,9 @@ class InMemoryHistoryManagerTest {
         assertEquals(task2, history.get(0));
     }
 
+    /**
+     * Проверка удаления несуществующей задачи не изменяет историю.
+     */
     @Test
     void testRemoveNonExistentTask() {
         Task task1 = new Task("Task 1", "Desc 1");
@@ -73,6 +89,9 @@ class InMemoryHistoryManagerTest {
         assertEquals(task1, history.get(0));
     }
 
+    /**
+     * Проверка пустой истории.
+     */
     @Test
     void testEmptyHistory() {
         List<Task> history = historyManager.getHistory();
