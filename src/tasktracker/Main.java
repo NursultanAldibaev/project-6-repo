@@ -1,7 +1,6 @@
 package tasktracker;
 
 import tracker.controllers.InMemoryTaskManager;
-import tracker.controllers.TaskManager;
 import tracker.model.Subtask;
 import tracker.model.Task;
 
@@ -20,21 +19,14 @@ public class Main {
         manager.createSubtask(sub1);
         manager.createSubtask(sub2);
 
-        manager.getTaskById(task1.getId());
-        manager.getTaskById(task2.getId());
-        manager.getSubtaskById(sub1.getId());
-        manager.getTaskById(task1.getId()); // повтор, перемещается в конец
-
-        System.out.println("История просмотров:");
-        for (Task t : manager.getHistory()) {
-            System.out.println(t);
+        System.out.println("All tasks:");
+        for (Task task : manager.getAllTasks()) {
+            System.out.println(task);
         }
 
-        manager.deleteTask(task2.getId());
-
-        System.out.println("\nИстория после удаления Task 2:");
-        for (Task t : manager.getHistory()) {
-            System.out.println(t);
+        System.out.println("All subtasks:");
+        for (Subtask subtask : manager.getAllSubtasks()) {
+            System.out.println(subtask);
         }
     }
 }
