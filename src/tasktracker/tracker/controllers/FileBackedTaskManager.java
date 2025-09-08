@@ -16,6 +16,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private final File file; // файл для хранения данных
 
+    private static final String CSV_HEADER = "id,type,name,status,description,epic\n";
+
     /**
      * Конструктор менеджера задач с указанием файла хранения.
      *
@@ -135,7 +137,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     protected void save() {
         try (Writer writer = new FileWriter(file)) {
             // Заголовок CSV
-            writer.write("id,type,name,status,description,epic\n");
+            writer.write(CSV_HEADER);
 
             // Сохраняем все сущности
             for (Task task : getAllTasks()) {
