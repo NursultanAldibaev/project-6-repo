@@ -2,7 +2,10 @@ package tracker.controllers;
 
 import tracker.model.*;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.nio.file.Files;
 
 /**
@@ -13,97 +16,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private final File file; // файл для хранения данных
 
+    /**
+     * Конструктор менеджера задач с указанием файла хранения.
+     *
+     * @param file файл для хранения данных
+     */
     public FileBackedTaskManager(File file) {
         this.file = file;
     }
 
     /**
-     * Сохраняет все задачи в CSV-файл.
-     * Формат: id,type,name,status,description,epic
-     */
-    protected void save() {
-        try (Writer writer = new FileWriter(file)) {
-            // Заголовок CSV
-            writer.write("id,type,name,status,description,epic\n");
-
-            // Сохраняем все сущности
-            for (Task task : getAllTasks()) {
-                writer.write(toString(task) + "\n");
-            }
-            for (Epic epic : getAllEpics()) {
-                writer.write(toString(epic) + "\n");
-            }
-            for (Subtask subtask : getAllSubtasks()) {
-                writer.write(toString(subtask) + "\n");
-            }
-
-        } catch (IOException e) {
-            throw new ManagerSaveException("Ошибка при сохранении файла", e);
-        }
-    }
-
-    /**
-     * Преобразует задачу в строку CSV.
-     * Для подзадачи добавляется ID её эпика.
-     */
-    private String toString(Task task) {
-        TaskType type;
-        if (task instanceof Epic) {
-            type = TaskType.EPIC;
-        } else if (task instanceof Subtask) {
-            type = TaskType.SUBTASK;
-        } else {
-            type = TaskType.TASK;
-        }
-
-        // Для Subtask указываем номер эпика
-        String epicField = "";
-        if (task instanceof Subtask) {
-            epicField = String.valueOf(((Subtask) task).getEpicId());
-        }
-
-        return String.format("%d,%s,%s,%s,%s,%s",
-                task.getId(),
-                type,
-                task.getName(),
-                task.getStatus(),
-                task.getDescription(),
-                epicField
-        );
-    }
-
-    /**
-     * Восстанавливает задачу из строки CSV.
-     */
-    private Task fromString(String value) {
-        String[] fields = value.split(",");
-        int id = Integer.parseInt(fields[0]);
-        String type = fields[1];
-        String name = fields[2];
-        Status status = Status.valueOf(fields[3]);
-        String description = fields[4];
-
-        Task task;
-        switch (type) {
-            case "EPIC":
-                task = new Epic(name, description);
-                break;
-            case "SUBTASK":
-                int epicId = Integer.parseInt(fields[5]);
-                task = new Subtask(name, description, epicId);
-                break;
-            default:
-                task = new Task(name, description);
-        }
-
-        task.setId(id);
-        task.setStatus(status);
-        return task;
-    }
-
-    /**
      * Статический метод загрузки менеджера из файла.
      * Если файл пустой — вернётся пустой менеджер.
+     *
+     * @param file файл для загрузки
+     * @return менеджер задач с данными из файла
      */
     public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
@@ -118,7 +45,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
             // Пропускаем первую строку (заголовок)
             for (int i = 1; i < lines.length; i++) {
-                if (lines[i].isBlank()) continue;
+                if (lines[i].isBlank()) {
+                    continue;
+                }
 
                 Task task = manager.fromString(lines[i]);
 
@@ -195,5 +124,96 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public void deleteSubtask(int id) {
         super.deleteSubtask(id);
         save();
+    }
+
+    // ⬇️ Protected методы
+
+    /**
+     * Сохраняет все задачи в CSV-файл.
+     * Формат: id,type,name,status,description,epic
+     */
+    protected void save() {
+        try (Writer writer = new FileWriter(file)) {
+            // Заголовок CSV
+            writer.write("id,type,name,status,description,epic\n");
+
+            // Сохраняем все сущности
+            for (Task task : getAllTasks()) {
+                writer.write(toString(task) + "\n");
+            }
+            for (Epic epic : getAllEpics()) {
+                writer.write(toString(epic) + "\n");
+            }
+            for (Subtask subtask : getAllSubtasks()) {
+                writer.write(toString(subtask) + "\n");
+            }
+
+        } catch (IOException e) {
+            throw new ManagerSaveException("Ошибка при сохранении файла", e);
+        }
+    }
+
+    // ⬇️ Private методы
+
+    /**
+     * Преобразует задачу в строку CSV.
+     * Для подзадачи добавляется ID её эпика.
+     *
+     * @param task задача
+     * @return строка CSV
+     */
+    private String toString(Task task) {
+        TaskType type;
+        if (task instanceof Epic) {
+            type = TaskType.EPIC;
+        } else if (task instanceof Subtask) {
+            type = TaskType.SUBTASK;
+        } else {
+            type = TaskType.TASK;
+        }
+
+        // Для Subtask указываем номер эпика
+        String epicField = "";
+        if (task instanceof Subtask) {
+            epicField = String.valueOf(((Subtask) task).getEpicId());
+        }
+
+        return String.format("%d,%s,%s,%s,%s,%s",
+                task.getId(),
+                type,
+                task.getName(),
+                task.getStatus(),
+                task.getDescription(),
+                epicField
+        );
+    }
+
+    /**
+     * Восстанавливает задачу из строки CSV.
+     *
+     * @param value строка CSV
+     * @return задача
+     */
+    private Task fromString(String value) {
+        String[] fields = value.split(",");
+        int id = Integer.parseInt(fields[0]);
+        String type = fields[1];
+        String name = fields[2];
+        Status status = Status.valueOf(fields[3]);
+        String description = fields[4];
+
+        Task task;
+        switch (type) {
+            case "EPIC" -> task = new Epic(name, description);
+            case "SUBTASK" -> {
+                int epicId = Integer.parseInt(fields[5]);
+                task = new Subtask(name, description, epicId);
+            }
+            default -> task = new Task(name, description);
+        }
+
+        task.setId(id);
+        task.setStatus(status);
+        return task;
     }
 }
