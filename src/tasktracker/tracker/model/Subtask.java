@@ -39,7 +39,7 @@ public class Subtask extends Task {
         String start = getStartTime() == null ? "" : getStartTime().toString();
         return String.format("%d,%s,%s,%s,%s,%d,%d,%s",
                 getId(), TaskType.SUBTASK, escapeCommas(getName()), getStatus(), escapeCommas(getDescription()),
-                epicId, durationMinutes, (getStartTime() == null ? "" : getStartTime().toString()));
+                epicId, durationMinutes, start);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class Subtask extends Task {
                ", description='" + getDescription() + '\'' +
                ", status=" + getStatus() +
                ", epicId=" + epicId +
-               ", duration=" + (getDuration()==null? "null": getDuration().toMinutes() + "m")+
+               ", duration=" + (getDuration() == null ? "null" : getDuration().toMinutes() + "m") +
                ", startTime=" + getStartTime() +
                '}';
     }
