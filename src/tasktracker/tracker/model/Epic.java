@@ -57,7 +57,7 @@ public class Epic extends Task {
      * Пересчитывает поля эпика (duration, startTime, endTime) на основе подзадач.
      * Этот метод должен вызываться менеджером задач при изменениях подзадач.
      *
-     * @param subtasksProvider функция/лента для доступа к подзадачам (например, мапа)
+     * @param subtasks функция/лента для доступа к подзадачам (например, мапа)
      */
     public void updateFromSubtasks(java.util.Map<Integer, Subtask> subtasks) {
         Duration total = Duration.ZERO;
@@ -109,7 +109,7 @@ public class Epic extends Task {
                ", description='" + getDescription() + '\'' +
                ", status=" + getStatus() +
                ", subtaskIds=" + subtaskIds +
-               ", duration=" + (duration == null ? "null" : duration.toMinutes()+"m") +
+               ", duration=" + (duration == null ? "null" : duration.toMinutes() + "m") +
                ", startTime=" + startTime +
                ", endTime=" + endTime +
                '}';
