@@ -54,6 +54,35 @@ public class Task {
         this.status = status;
     }
 
+    // 🔽 Новый метод — сохранение в CSV
+    public String toCsvString() {
+        return String.format("%d,%s,%s,%s,%s,", id, TaskType.TASK, name, status, description);
+    }
+
+    // 🔽 Новый метод — восстановление из CSV
+    public static Task fromCsv(String line) {
+        String[] fields = line.split(",");
+        int id = Integer.parseInt(fields[0]);
+        String type = fields[1];
+        String name = fields[2];
+        Status status = Status.valueOf(fields[3]);
+        String description = fields[4];
+
+        Task task;
+        switch (type) {
+            case "EPIC" -> task = new Epic(name, description);
+            case "SUBTASK" -> {
+                int epicId = Integer.parseInt(fields[5]);
+                task = new Subtask(name, description, epicId);
+            }
+            default -> task = new Task(name, description);
+        }
+
+        task.setId(id);
+        task.setStatus(status);
+        return task;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
@@ -63,5 +92,4 @@ public class Task {
                ", status=" + status +
                '}';
     }
-
 }

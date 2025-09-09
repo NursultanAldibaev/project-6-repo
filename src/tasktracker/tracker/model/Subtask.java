@@ -23,6 +23,13 @@ public class Subtask extends Task {
         return epicId;
     }
 
+    // 🔽 Новый метод — сохранение в CSV
+    @Override
+    public String toCsvString() {
+        return String.format("%d,%s,%s,%s,%s,%d",
+                getId(), TaskType.SUBTASK, getName(), getStatus(), getDescription(), epicId);
+    }
+
     @Override
     public String toString() {
         return "Subtask{" +
@@ -33,5 +40,4 @@ public class Subtask extends Task {
                ", epicId=" + epicId +
                '}';
     }
-
 }

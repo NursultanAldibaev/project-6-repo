@@ -33,6 +33,12 @@ public class Epic extends Task {
         subtaskIds.remove(Integer.valueOf(id));
     }
 
+    // 🔽 Новый метод — сохранение в CSV
+    @Override
+    public String toCsvString() {
+        return String.format("%d,%s,%s,%s,%s,", getId(), TaskType.EPIC, getName(), getStatus(), getDescription());
+    }
+
     @Override
     public String toString() {
         return "Epic{" +
@@ -43,5 +49,4 @@ public class Epic extends Task {
                ", subtaskIds=" + subtaskIds +
                '}';
     }
-
 }
