@@ -12,7 +12,6 @@ public class Epic extends Task {
 
     private final List<Integer> subtaskIds = new ArrayList<>();
 
-    // Для эпика duration/startTime/endTime вычисляемые (храним endTime для удобства)
     private Duration duration = Duration.ZERO;
     private LocalDateTime startTime = null;
     private LocalDateTime endTime = null;
@@ -26,7 +25,6 @@ public class Epic extends Task {
     public Epic(String name, String description) {
         super(name, description);
         setStatus(Status.NEW);
-        // duration/startTime управляются через updateFromSubtasks
     }
 
     public List<Integer> getSubtaskIds() {
@@ -54,64 +52,100 @@ public class Epic extends Task {
     }
 
     /**
-     * Пересчитывает поля эпика (duration, startTime, endTime) на основе подзадач.
-     * Этот метод должен вызываться менеджером задач при изменениях подзадач.
+     * Пересчитывает поля эпика (duration, startTime, endTime, status) на основе подзадач.
      *
-     * @param subtasks функция/лента для доступа к подзадачам (например, мапа)
+     * @param subtasks мапа с подзадачами
      */
     public void updateFromSubtasks(java.util.Map<Integer, Subtask> subtasks) {
+        if (subtaskIds.isEmpty()) {
+            setStatus(Status.NEW);
+            duration = null;
+            startTime = null;
+            endTime = null;
+            return;
+        }
+
         Duration total = Duration.ZERO;
         LocalDateTime minStart = null;
         LocalDateTime maxEnd = null;
+
+        boolean hasNew = false;
+        boolean hasDone = false;
 
         for (Integer id : subtaskIds) {
             Subtask s = subtasks.get(id);
             if (s == null) {
                 continue;
             }
+
+            // Статус эпика
+            if (s.getStatus() == Status.NEW) {
+                hasNew = true;
+            } else if (s.getStatus() == Status.DONE) {
+                hasDone = true;
+            } else {
+                hasNew = true;
+                hasDone = true;
+            }
+
+            // Duration и время
             if (s.getDuration() != null) {
                 total = total.plus(s.getDuration());
             }
+
             LocalDateTime sStart = s.getStartTime();
             LocalDateTime sEnd = s.getEndTime();
-            if (sStart != null) {
-                if (minStart == null || sStart.isBefore(minStart)) {
-                    minStart = sStart;
-                }
+
+            if (sStart != null && (minStart == null || sStart.isBefore(minStart))) {
+                minStart = sStart;
             }
-            if (sEnd != null) {
-                if (maxEnd == null || sEnd.isAfter(maxEnd)) {
-                    maxEnd = sEnd;
-                }
+            if (sEnd != null && (maxEnd == null || sEnd.isAfter(maxEnd))) {
+                maxEnd = sEnd;
             }
         }
 
-        this.duration = total.equals(Duration.ZERO) ? null : total;
-        this.startTime = minStart;
-        this.endTime = maxEnd;
+        // Обновляем статус эпика
+        if (hasNew && hasDone) {
+            setStatus(Status.IN_PROGRESS);
+        } else if (hasDone && !hasNew) {
+            setStatus(Status.DONE);
+        } else {
+            setStatus(Status.NEW);
+        }
+
+        duration = total.equals(Duration.ZERO) ? null : total;
+        startTime = minStart;
+        endTime = maxEnd;
     }
 
-    // 🔽 Новый метод — сохранение в CSV
     @Override
     public String toCsvString() {
         long durationMinutes = (getDuration() == null) ? -1 : getDuration().toMinutes();
         String start = (getStartTime() == null) ? "" : getStartTime().toString();
-        return String.format("%d,%s,%s,%s,%s,%s,%d,%s",
-                getId(), TaskType.EPIC, escapeCommas(getName()), getStatus(), escapeCommas(getDescription()),
-                "", durationMinutes, start);
+        return String.format(
+                "%d,%s,%s,%s,%s,%s,%d,%s",
+                getId(),
+                TaskType.EPIC,
+                escapeCommas(getName()),
+                getStatus(),
+                escapeCommas(getDescription()),
+                "",
+                durationMinutes,
+                start
+        );
     }
 
     @Override
     public String toString() {
         return "Epic{" +
-               "id=" + getId() +
-               ", name='" + getName() + '\'' +
-               ", description='" + getDescription() + '\'' +
-               ", status=" + getStatus() +
-               ", subtaskIds=" + subtaskIds +
-               ", duration=" + (duration == null ? "null" : duration.toMinutes() + "m") +
-               ", startTime=" + startTime +
-               ", endTime=" + endTime +
-               '}';
+                "id=" + getId() +
+                ", name='" + getName() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", status=" + getStatus() +
+                ", subtaskIds=" + subtaskIds +
+                ", duration=" + ((duration == null) ? "null" : duration.toMinutes() + "m") +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                '}';
     }
 }
