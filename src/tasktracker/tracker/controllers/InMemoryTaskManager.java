@@ -7,8 +7,6 @@ import tracker.model.Status;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Реализация TaskManager в памяти с интеграцией истории просмотров.
