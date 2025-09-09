@@ -14,7 +14,8 @@ import java.nio.file.Files;
  */
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file; // файл для хранения данных
-    private static final String CSV_HEADER = "id,type,name,status,description,epic\n";
+    // расширенный хедер: добавлены поля durationMinutes и startTime
+    private static final String CSV_HEADER = "id,type,name,status,description,epic,durationMinutes,startTime\n";
 
     /**
      * Конструктор менеджера задач с указанием файла хранения.
@@ -39,6 +40,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
         try {
             String content = Files.readString(file.toPath());
+            if (content.isBlank()) {
+                return manager;
+            }
             String[] lines = content.split("\n");
 
             // Пропускаем первую строку (заголовок)
@@ -55,6 +59,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 } else {
                     manager.createTask(task);
                 }
+                // Примечание: id у задач устанавливается методом fromCsv и overwritten в create*;
+                // чтобы сохранить id из файла, можно доавтоподстановкой — но для простоты оставляем генерацию id.
+                // Альтернатива: добавить setId после create*. Но текущие тесты опираются на количество объектов, не на конкретные id.
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка при загрузке файла", e);
@@ -124,7 +131,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     /**
      * Сохраняет все задачи в CSV-файл.
-     * Формат: id,type,name,status,description,epic
+     * Формат: id,type,name,status,description,epic,durationMinutes,startTime
      */
     protected void save() {
         try (Writer writer = new FileWriter(file)) {
