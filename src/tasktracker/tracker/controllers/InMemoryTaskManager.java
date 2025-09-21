@@ -6,11 +6,9 @@ import tracker.model.Subtask;
 import tracker.model.Status;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Реализация TaskManager в памяти с интеграцией истории просмотров.
@@ -170,22 +168,16 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     /**
-     * Возвращает список задач и подзадач в порядке приоритета (по startTime).
+     * Возвращает список задач и подзадач (пока без сортировки).
      *
-     * @return отсортированный список
+     * @return список всех задач и подзадач
      */
     @Override
     public List<Task> getPrioritizedTasks() {
         List<Task> prioritized = new ArrayList<>();
         prioritized.addAll(tasks.values());
         prioritized.addAll(subtasks.values());
-
-        return prioritized.stream()
-                .sorted(Comparator.comparing(
-                        Task::getStartTime,
-                        Comparator.nullsLast(Comparator.naturalOrder())
-                ))
-                .collect(Collectors.toList());
+        return prioritized; // пока без сортировки, т.к. нет startTime
     }
 
     /**
