@@ -162,8 +162,22 @@ public class InMemoryTaskManager implements TaskManager {
      *
      * @return список задач в порядке просмотра
      */
+    @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
+    }
+
+    /**
+     * Возвращает список задач и подзадач (пока без сортировки).
+     *
+     * @return список всех задач и подзадач
+     */
+    @Override
+    public List<Task> getPrioritizedTasks() {
+        List<Task> prioritized = new ArrayList<>();
+        prioritized.addAll(tasks.values());
+        prioritized.addAll(subtasks.values());
+        return prioritized; // пока без сортировки, т.к. нет startTime
     }
 
     /**

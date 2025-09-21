@@ -27,7 +27,7 @@ public interface TaskManager {
 
     List<Epic> getAllEpics();
 
-    List<Subtask> getAllSubtasks(); // Исправлено: без аргументов
+    List<Subtask> getAllSubtasks();
 
     void updateTask(Task task);
 
@@ -41,4 +41,8 @@ public interface TaskManager {
 
     void deleteSubtask(int id);
 
+    // 🔽 добавь эти методы
+    List<Task> getHistory();
+
+    List<Task> getPrioritizedTasks();
 }
